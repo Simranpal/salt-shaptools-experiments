@@ -894,3 +894,50 @@ class HanamodTestCase(TestCase, LoaderModuleMockMixin):
                 sid='prd',
                 inst='00',
                 password='pass')
+
+    def test_memory_resources_updated_error(self):
+        '''
+        Test to check memory_resources_updated when some hana command fails
+        '''
+        name = 'prd'
+
+        ret = {'name': name,
+               'changes': {},
+               'result': False,
+               'comment': 'hana command error'}
+
+        mock_installed = MagicMock(return_value=True)
+        mock_running = MagicMock(return_value=False)
+        mock_stop = MagicMock()
+        mock_start = MagicMock()
+        mock_set_ini_parameter = MagicMock(
+            side_effect=exceptions.CommandExecutionError('hana command error'))
+        ini_parameter_values = [{'section_name': 'system_replication',
+                                 'parameter_name': 'preload_column_tables',
+                                 'parameter_value': False},
+                                {'section_name': 'memorymanager',
+                                 'parameter_name': 'global_allocation_limit',
+                                 'parameter_value': '25000'}]
+
+        with patch.dict(hanamod.__salt__,
+                        {'hana.is_installed': mock_installed,
+                         'hana.is_running': mock_running,
+                         'hana.set_ini_parameter': mock_set_ini_parameter,
+                         'hana.stop': mock_stop,
+                         'hana.start': mock_start}):
+            assert hanamod.memory_resources_updated(
+                    name=name, sid='prd', inst='00', password='pass',
+                    global_allocation_limit='25000', preload_column_tables=False,
+                    user_name='key_user', user_password='key_password') == ret
+            mock_set_ini_parameter.assert_called_once_with(
+                ini_parameter_values=ini_parameter_values,
+                database='SYSTEMDB',
+                file_name='global.ini',
+                layer='SYSTEM',
+                layer_name=None,
+                reconfig=True,
+                user_name='key_user',
+                user_password='key_password',
+                sid='prd',
+                inst='00',
+                password='pass')
