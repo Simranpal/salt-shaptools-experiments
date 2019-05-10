@@ -624,17 +624,22 @@ class HanaModuleTest(TestCase, LoaderModuleMockMixin):
         '''
         mock_hana_inst = MagicMock()
         mock_hana = MagicMock(return_value=mock_hana_inst)
+        ini_parameter_values = [{'section_name': 'memorymanager',
+                                 'parameter_name': 'global_allocation_limit',
+                                 'parameter_value': '25000'}]
         with patch.object(hanamod, '_init', mock_hana):
-            hanamod.set_ini_parameter(
-                ini_parameter_values=[{'section_name':'memorymanager',
-                'parameter_name':'global_allocation_limit', 'parameter_value':'25000'}],
-                database='db', file_name='global.ini', layer='SYSTEM',
-                layer_name=None, reconfig=True, key_name='key', user_name='key_user',
-                user_password='key_password', sid='prd', inst='00', password='pass')
+            hanamod.set_ini_parameter(ini_parameter_values=ini_parameter_values,
+                                      database='db', file_name='global.ini',
+                                      layer='SYSTEM', layer_name=None,
+                                      reconfig=True, key_name='key',
+                                      user_name='key_user',
+                                      user_password='key_password',
+                                      sid='prd', inst='00', password='pass')
             mock_hana.assert_called_once_with('prd', '00', 'pass')
             mock_hana_inst.set_ini_parameter.assert_called_once_with(
-                ini_parameter_values=[{'section_name':'memorymanager',
-                'parameter_name':'global_allocation_limit', 'parameter_value':'25000'}],
+                ini_parameter_values=[{'section_name': 'memorymanager',
+                                       'parameter_name': 'global_allocation_limit',
+                                       'parameter_value': '25000'}],
                 database='db', file_name='global.ini',
                 layer='SYSTEM', layer_name=None, reconfig=True,
                 key_name='key', user_name='key_user', user_password='key_password')
@@ -648,18 +653,22 @@ class HanaModuleTest(TestCase, LoaderModuleMockMixin):
             'hana error'
         )
         mock_hana = MagicMock(return_value=mock_hana_inst)
+        ini_parameter_values = [{'section_name': 'memorymanager',
+                                 'parameter_name': 'global_allocation_limit',
+                                 'parameter_value': '25000'}]
         with patch.object(hanamod, '_init', mock_hana):
             with pytest.raises(exceptions.CommandExecutionError) as err:
                 hanamod.set_ini_parameter(
-                    ini_parameter_values=[{'section_name':'memorymanager',
-                    'parameter_name':'global_allocation_limit', 'parameter_value':'25000'}],
-                    database='db', file_name='global.ini',layer='SYSTEM',
-                    layer_name=None, reconfig=True, key_name='key', user_name='key_user',
-                    user_password='key_password', sid='prd', inst='00', password='pass')
+                    ini_parameter_values=ini_parameter_values,
+                    database='db', file_name='global.ini', layer='SYSTEM',
+                    layer_name=None, reconfig=True, key_name='key',
+                    user_name='key_user', user_password='key_password',
+                    sid='prd', inst='00', password='pass')
             mock_hana.assert_called_once_with('prd', '00', 'pass')
             mock_hana_inst.set_ini_parameter.assert_called_once_with(
-                ini_parameter_values=[{'section_name':'memorymanager',
-                'parameter_name':'global_allocation_limit', 'parameter_value':'25000'}],
+                ini_parameter_values=[{'section_name': 'memorymanager',
+                                       'parameter_name': 'global_allocation_limit',
+                                       'parameter_value': '25000'}],
                 database='db', file_name='global.ini',
                 layer='SYSTEM', layer_name=None, reconfig=True,
                 key_name='key', user_name='key_user', user_password='key_password')
@@ -672,16 +681,17 @@ class HanaModuleTest(TestCase, LoaderModuleMockMixin):
         mock_hana_inst = MagicMock()
         mock_hana = MagicMock(return_value=mock_hana_inst)
         with patch.object(hanamod, '_init', mock_hana):
-            hanamod.set_ini_parameter(
-                ini_parameter_values=[{'section_name':'memorymanager',
-                'parameter_name':'global_allocation_limit', 'parameter_value':'25000'}],
+            hanamod.unset_ini_parameter(
+                ini_parameter_names=[{'section_name': 'memorymanager',
+                                      'parameter_name': 'global_allocation_limit'}],
                 database='db', file_name='global.ini', layer='SYSTEM',
-                layer_name=None, reconfig=True, key_name='key', user_name='key_user',
-                user_password='key_password', sid='prd', inst='00', password='pass')
+                layer_name=None, reconfig=True, key_name='key',
+                user_name='key_user', user_password='key_password',
+                sid='prd', inst='00', password='pass')
             mock_hana.assert_called_once_with('prd', '00', 'pass')
-            mock_hana_inst.set_ini_parameter.assert_called_once_with(
-                ini_parameter_values=[{'section_name':'memorymanager',
-                'parameter_name':'global_allocation_limit', 'parameter_value':'25000'}],
+            mock_hana_inst.unset_ini_parameter.assert_called_once_with(
+                ini_parameter_names=[{'section_name': 'memorymanager',
+                                      'parameter_name': 'global_allocation_limit'}],
                 database='db', file_name='global.ini',
                 layer='SYSTEM', layer_name=None, reconfig=True,
                 key_name='key', user_name='key_user', user_password='key_password')
@@ -698,15 +708,17 @@ class HanaModuleTest(TestCase, LoaderModuleMockMixin):
         with patch.object(hanamod, '_init', mock_hana):
             with pytest.raises(exceptions.CommandExecutionError) as err:
                 hanamod.unset_ini_parameter(
-                    ini_parameter_names=[{'section_name':'memorymanager',
-                    'parameter_name':'global_allocation_limit'}],
+                    ini_parameter_names=[{'section_name': 'memorymanager',
+                                          'parameter_name':
+                                          'global_allocation_limit'}],
                     database='db', file_name='global.ini', layer='SYSTEM',
-                    layer_name=None, reconfig=True, key_name='key', user_name='key_user',
-                    user_password='key_password', sid='prd', inst='00', password='pass')
+                    layer_name=None, reconfig=True, key_name='key',
+                    user_name='key_user', user_password='key_password',
+                    sid='prd', inst='00', password='pass')
             mock_hana.assert_called_once_with('prd', '00', 'pass')
             mock_hana_inst.unset_ini_parameter.assert_called_once_with(
-                ini_parameter_names=[{'section_name':'memorymanager',
-                'parameter_name':'global_allocation_limit'}],
+                ini_parameter_names=[{'section_name': 'memorymanager',
+                                      'parameter_name': 'global_allocation_limit'}],
                 database='db', file_name='global.ini',
                 layer_name=None, layer='SYSTEM', reconfig=True,
                 key_name='key', user_name='key_user', user_password='key_password')
